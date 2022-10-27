@@ -58,7 +58,7 @@
       // main fetch function for gh pages
       const fetchSVGIcons = async () => {
         // find the /icons folder from the main repository
-        const repositoryUrl = `https://api.github.com/repos/toptalent0411/raincons/git/trees/main`
+        const repositoryUrl = `https://api.github.com/repos/rnbwdev/raincons/git/trees/main`
         const repositoryContent = await fetch(repositoryUrl).then(res => res.json())
         const iconsFolderObj = repositoryContent.tree.find(node => node.path === 'icons')
 
