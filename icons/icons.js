@@ -155,7 +155,7 @@
         $('#searchInput').on('keyup', function (event) {
           // display CSS constants
           const NONE = 'none'
-          const BLOCK = ''
+          const BLOCK = 'block'
 
           // variables
           let total_icons = document.getElementsByTagName('svg-icon')
@@ -186,15 +186,15 @@
             let categoryId = $(this)[0].id + '-icon'
             let flag = false
             $(document).find(`svg-icon.${categoryId}`).each(function (index, icon) {
-              if ($(icon).css('display') == 'inline') {
+              if ($(icon).css('display') == BLOCK) {
                 flag = true
               }
             })
 
             if (!flag) {
-              $(this).css('display', NONE)
+              $(this).parent().parent().css('display', NONE)
             } else {
-              $(this).css('display', BLOCK)
+              $(this).parent().parent().css('display', BLOCK)
             }
           })
         })
