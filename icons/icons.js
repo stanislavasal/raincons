@@ -26,11 +26,13 @@
   // notification appear/disappear timeoutID
   let notificationAppearTimeoutID = null
 
-  // load jquery js
-  let script = document.createElement("SCRIPT")
-  script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'
-  script.type = 'text/javascript'
-  document.getElementsByTagName("head")[0].appendChild(script)
+  if (!window.jQuery) {
+    // load jquery js
+    let script = document.createElement("SCRIPT")
+    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'
+    script.type = 'text/javascript'
+    document.getElementsByTagName("head")[0].appendChild(script)
+  }
 
   // poll for jQuery to come into existence
   let checkReady = function (callback) {
@@ -102,25 +104,25 @@
           iconCategories.forEach(category => {
             // build html for the category section
             contentHtml += `
-              <div class="gap-m direction-row">
-                <!-- Category Label -->
-                <div>
-                  <h5 style="text-transform: capitalize;" id="${category}" class="category-label">${category}</h5>
-                </div>
-    
-                <!-- SVGIcons -->
-                <div class="gap-l box-l">`
+                <div class="gap-m direction-row">
+                  <!-- Category Label -->
+                  <div>
+                    <h5 style="text-transform: capitalize;" id="${category}" class="category-label">${category}</h5>
+                  </div>
+      
+                  <!-- SVGIcons -->
+                  <div class="gap-l box-l">`
 
             iconsInCategory[category].forEach(icon => {
               contentHtml += `
-                  <svg-icon class="${category}-icon">${category != 'uncategorized' ? category + '/' : ''}${icon}</svg-icon>
-                `
+                    <svg-icon class="${category}-icon">${category != 'uncategorized' ? category + '/' : ''}${icon}</svg-icon>
+                  `
             })
 
             contentHtml += `
+                  </div>
                 </div>
-              </div>
-              `
+                `
           })
 
           // append the built html to the #content
@@ -212,7 +214,7 @@
       */
       /* // get current icons.html href
       let iconsHtmlHref = window.location.href
-
+ 
       // get /icons directory url
       let hArr = iconsHtmlHref.split('/')
       hArr.pop()
@@ -245,13 +247,13 @@
           categoryName = categoryName.replace(/\//, "")
           // get /icons/category directory url
           let iconCategoryDirUrl = iconsDirUrl + "/" + categoryName
-
+ 
           // get /icons/category directory structure html
           let iconsHtml = await $.ajax({
             url: iconCategoryDirUrl,
             type: 'GET',
           })
-
+ 
           // get /icons/category/icon-name code part from the /icons/category directory html
           let iconATagList = $(iconsHtml).find('a')
           let svgIconNames = []
@@ -267,7 +269,7 @@
             iconName = iconName.substring(0, iconName.length - 4)
             svgIconNames.push(iconName)
           }
-
+ 
           // build html for the category section
           categorySectionHtml += `
             <div class="gap-m direction-row">
@@ -275,7 +277,7 @@
               <div>
                 <h5 style="text-transform: capitalize;" id="${categoryName}" class="category-label">${categoryName}</h5>
               </div>
-
+ 
               <!-- SVGIcons -->
               <div class="gap-l box-l">`
           for (let svgIconName of svgIconNames) {
@@ -297,7 +299,7 @@
               <div>
                 <h5 id="${categoryName}" class="category-label">${categoryName}</h5>
               </div>
-
+ 
               <!-- SVGIcons -->
               <div class="gap-l box-l">`
           for (let i = 0; i < uncategorized.length; i++) {
@@ -311,18 +313,18 @@
           `
         }
         $('#content').append(uncategorizedHtml + categorySectionHtml)
-
+ 
         // add event handlers after html page is completed
         // filter when keyboard is released
         $('#searchInput').on('keyup', function (event) {
           // display CSS constants
           const NONE = 'none'
           const BLOCK = 'block'
-
+ 
           // variables
           let total_icons = document.getElementsByTagName('svg-icon')
           let search_content = $(this).val()
-
+ 
           if (search_content === '') {
             // show all icons
             for (let i = 0; i < total_icons.length; i++) {
@@ -342,7 +344,7 @@
               }
             }
           }
-
+ 
           // remove .category-label including no svg-icon
           $('.category-label').each(function () {
             let categoryId = $(this)[0].id + '-icon'
@@ -352,7 +354,7 @@
                 flag = true
               }
             })
-
+ 
             if (!flag) {
               $(this).parent().parent().css('display', NONE)
             } else {
@@ -360,13 +362,13 @@
             }
           })
         })
-
+ 
         // copy svg-icon iconName to clipboard on clicking 
         $('svg-icon:not(.post-icon)').click(function () {
           // get iconName from svg-icon
           let iconName = $(this)[0].innerHTML
           let iconHtml = `<svg-icon>${iconName}</svg-icon>`
-
+ 
           // copy iconName to clipboard
           let dummy = document.createElement("textarea")
           document.body.appendChild(dummy)
@@ -374,12 +376,12 @@
           dummy.select()
           document.execCommand("copy")
           document.body.removeChild(dummy)
-
+ 
           // show notification
           clearTimeout(notificationAppearTimeoutID)
           $(notification).css('opacity', '1.0')
           notification.innerHTML = `Copied - &lt;svg-icon&gt;${iconName}&lt;/svg-icon&gt;`
-
+ 
           // hide notification after 3s delay
           notificationAppearTimeoutID = setTimeout(() => {
             $(notification).css('opacity', '0.0')
