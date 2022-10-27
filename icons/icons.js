@@ -50,7 +50,7 @@
       *********************************************** 3. This is for the GitHub Page using api.github.com/repos/... ******************
       */
       // variables for whole icon category/icons
-      let iconCategories = ['uncategorized']
+      let iconCategories = ['uncategorized'], iconCategoryObjList = []
       let iconsInCategory = {
         'uncategorized': []
       }
@@ -74,9 +74,10 @@
             } else { // this is the case for icon-category folder
               // save the category
               iconCategories.push(node.path)
+              iconCategoryObjList.push(node)
             }
           })
-          await Promise.all(iconCategories.map(async (category) => {
+          await Promise.all(iconCategoryObjList.map(async (category) => {
             // get the icons inside the category folder
             iconsInCategory[category.path] = []
             console.log(1)
