@@ -74,23 +74,25 @@
             } else { // this is the case for icon-category folder
               // save the category
               iconCategories.push(node.path)
-              iconsInCategory[node.path] = []
-
-              // get the icons inside the category folder
-              const getCategoryIcons = async (category) => {
-                const iconCategoryFolderContent = await fetch(category.url).then(res => res.json())
-                iconCategoryFolderContent.tree.forEach(node => {
-                  // only get the valid svg icons
-                  if (node.path.search('.svg') != -1) {
-                    iconsInCategory[category.path].push(node.path.substring(0, node.path.length - 4))
-                  }
-                })
-              }
-              getCategoryIcons(node)
             }
           })
+          await Promise.all(iconCategories.map(async (category) => {
+            // get the icons inside the category folder
+            iconsInCategory[category.path] = []
+            console.log(1)
+            const iconCategoryFolderContent = await fetch(category.url).then(res => res.json())
+            iconCategoryFolderContent.tree.forEach(node => {
+              console.log(2)
+              // only get the valid svg icons
+              if (node.path.search('.svg') != -1) {
+                iconsInCategory[category.path].push(node.path.substring(0, node.path.length - 4))
+              }
+            })
+          })).then(() => {
+            console.log(3)
+          })
 
-          console.log(unCategorizedIcons, iconCategories, iconsInCategory)
+          console.log(4)
 
           // if it has no uncategorized icon, remove the category from the list 
           if (iconsInCategory['uncategorized'].length == 0) {
