@@ -44,6 +44,19 @@
   // start polling...
   checkReady(function ($) {
     $(function () {
+      const list_directory = async (user, repo, directory) => {
+        const url = `https://api.github.com/repos/toptalent0411/raincons/git/trees/master`;
+        const list = await fetch(url).then(res => res.json());
+        console.log(list)
+        /* const dir = list.tree.find(node => node.path === directory);
+        if (dir) {
+           const list = await fetch(dir.url).then(res => res.json());
+           return list.tree.map(node => node.path);
+        } */
+      }
+      list_directory()
+      return
+
       /*
       *********************************************** 1. Now JQuery is loaded ********************************************************
       *********************************************** 2. Fetch the svg icons from /icons folder **************************************
