@@ -44,18 +44,36 @@
   // start polling...
   checkReady(function ($) {
     $(function () {
-      const list_directory = async (user, repo, directory) => {
-        const url = `https://api.github.com/repos/toptalent0411/raincons/git/trees/master`;
+      const ghPageAPI = async () => {
+        const url = `https://api.github.com/repos/toptalent0411/raincons/git/trees/main`;
         const list = await fetch(url).then(res => res.json());
         console.log(list)
-        /* const dir = list.tree.find(node => node.path === directory);
-        if (dir) {
-           const list = await fetch(dir.url).then(res => res.json());
-           return list.tree.map(node => node.path);
-        } */
       }
-      list_directory()
+      ghPageAPI()
       return
+
+      /* async function list_directory(user, repo, directory) {
+        const url = `https://api.github.com/repos/${user}/${repo}/git/trees/master`;
+        const list = await fetch(url).then(res => res.json());
+        const dir = list.tree.find(node => node.path === directory);
+        if (dir) {
+          const list = await fetch(dir.url).then(res => res.json());
+          return list.tree.map(node => node.path);
+        }
+      } */
+      /* async function list_directory(user, repo, directory) {
+        const url = `https://api.github.com/repos/${user}/${repo}/git/trees/master`;
+        directory = directory.split('/').filter(Boolean);
+        const dir = await directory.reduce(async (acc, dir) => {
+          const { url } = await acc;
+          const list = await fetch(url).then(res => res.json());
+          return list.tree.find(node => node.path === dir);
+        }, { url });
+        if (dir) {
+          const list = await fetch(dir.url).then(res => res.json());
+          return list.tree.map(node => node.path);
+        }
+      } */
 
       /*
       *********************************************** 1. Now JQuery is loaded ********************************************************
