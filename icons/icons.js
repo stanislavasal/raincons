@@ -44,16 +44,20 @@
   // start polling...
   checkReady(function ($) {
     $(function () {
-      async function list_directory(user, repo, directory) {
-        const url = `https://api.github.com/repos/${user}/${repo}/git/trees/main`;
-        const list = await fetch(url).then(res => res.json());
-        const dir = list.tree.find(node => node.path === directory);
-        if (dir) {
-          const list = await fetch(dir.url).then(res => res.json());
-          return list.tree.map(node => node.path);
+      const fetchSVGIcons = async () => {
+        const repositoryUrl = `https://api.github.com/repos/toptalent0411/raincons/git/trees/main`;
+        const repositoryContent = await fetch(repositoryUrl).then(res => res.json());
+        const iconsFolderObj = repositoryContent.tree.find(node => node.path === 'icons');
+        if (iconsFolderObj) {
+          const iconsFolderContent = await fetch(iconsFolderObj.url).then(res => res.json());
+          const iconsFolderNodes = iconsFolderContent.tree.map(node => ({
+            path: node.path,
+            url: node.url
+          }));
+          console.log(iconsFolderNodes)
         }
       }
-      const iconCategoryList = list_directory('toptalent0411', 'raincons', 'icons')
+      const iconCategoryList = fetchSVGIcons('toptalent0411', 'raincons', 'icons')
       console.log(iconCategoryList)
       /* async function list_directory(user, repo) {
         const url = `https://api.github.com/repos/${user}/${repo}/git/trees/main`;
@@ -78,7 +82,7 @@
       *********************************************** 2. Fetch the svg icons from /icons folder **************************************
       */
       // get current icons.html href
-      let iconsHtmlHref = window.location.href
+      /* let iconsHtmlHref = window.location.href
 
       // get /icons directory url
       let hArr = iconsHtmlHref.split('/')
@@ -253,7 +257,7 @@
           }, 3 * 1000)
         })
       }
-      fetchSVGIcons()
+      fetchSVGIcons() */
     })
   })
 })()
