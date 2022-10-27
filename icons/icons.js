@@ -113,7 +113,7 @@
 
             iconsInCategory[category].forEach(icon => {
               contentHtml += `
-                  <svg-icon class="${category}-icon">${category}/${icon}</svg-icon>
+                  <svg-icon class="${category}-icon">${category != 'uncategorized' ? category + '/' : ''}${icon}</svg-icon>
                 `
             })
 
