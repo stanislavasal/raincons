@@ -64,6 +64,7 @@
 
         // if /icons folder is found, get all of icon-category/icons
         if (iconsFolderObj) {
+          // get the uncategorized icons and categories first
           const iconsFolderContent = await fetch(iconsFolderObj.url).then(res => res.json())
           iconsFolderContent.tree.forEach(node => {
             if (node.path.includes('.')) { // when it's not the icon-category folder
@@ -77,6 +78,9 @@
               iconCategoryObjList.push(node)
             }
           })
+
+          console.log(iconCategoryObjList)
+          // get all of the category-icons
           await Promise.all(iconCategoryObjList.map(async (category) => {
             // get the icons inside the category folder
             iconsInCategory[category.path] = []
