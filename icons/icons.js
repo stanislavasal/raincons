@@ -122,7 +122,6 @@
                 `
         })
 
-        console.log(contentHtml)
         // append the built html to the #content
         $('#content').append(contentHtml)
 
