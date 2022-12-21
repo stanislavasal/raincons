@@ -113,7 +113,8 @@
             }
           });
         }
-        // // get all of the category-icons
+
+        // // get all of the category-icons (commented out because it's doesn't seem to be required)
         // await Promise.all(
         //   iconCategoryObjList.map(async (category) => {
         //     // get the icons inside the category folder
