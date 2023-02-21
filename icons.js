@@ -67,7 +67,7 @@
       );
 
       // get all of the icons
-      const iconsFolderContent = await fetch(iconsFolderObj.url).then((res) => res.json());
+      const iconsFolderContent = await fetch(iconsFolderObj[0].url).then((res) => res.json());
       iconsFolderContent.tree.forEach((node) => {
         if (node.path.includes(".")) {
           if (node.path.search(".svg") != -1) {
