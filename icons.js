@@ -43,8 +43,8 @@
     window.jQuery
       ? cb()
       : window.setTimeout(function () {
-          checkReady(cb);
-        }, 20);
+        checkReady(cb);
+      }, 20);
   };
 
   // start polling...
@@ -57,116 +57,43 @@
        */
 
       // variables for whole icon category/icons
-      let iconCategoryObjList = [];
-      let iconsInCategory = {
-        uncategorized: [],
-      };
+      const icons = []
 
       // find the /icons folder from the main repository
       const repositoryUrl = `https://api.github.com/repos/rnbwdev/raincons/git/trees/main`;
-      const repositoryContent = await fetch(repositoryUrl).then((res) =>
-        res.json()
-      );
-
-      // get the array of folder content that are not of type "blob" (file)
-      const iconsFolderObjs = repositoryContent.tree.filter(
+      const repositoryContent = await fetch(repositoryUrl).then((res) => res.json());
+      const iconsFolderObj = repositoryContent.tree.filter(
         (node) => node.type !== "blob"
       );
 
-      //finding the uncategorised icons
-      repositoryContent.tree.forEach((node) => {
-        if (node.type === "blob") {
-          if (node.path.search(".svg") != -1)
-            iconsInCategory["uncategorized"].push(
-              node.path.substring(0, node.path.length - 4)
-            );
+      // get all of the icons
+      const iconsFolderContent = await fetch(iconsFolderObj.url).then((res) => res.json());
+      iconsFolderContent.tree.forEach((node) => {
+        if (node.path.includes(".")) {
+          if (node.path.search(".svg") != -1) {
+            icons.push(node.path.substring(0, node.path.length - 4))
+          }
         }
       });
-
-      // run a loop through all the folders assuming they have icons(.svg) file inside them
-      for (let i = 0; i < iconsFolderObjs.length; i++) {
-        let iconsCategoryFolderObj = iconsFolderObjs[i];
-
-        iconCategoryObjList.push(iconsCategoryFolderObj);
-
-        // if /icons folder is found, get all of icon-category/icons
-        if (iconsCategoryFolderObj) {
-          // get the uncategorized icons and categories first
-          const iconsFolderContent = await fetch(
-            iconsCategoryFolderObj.url
-          ).then((res) => res.json());
-
-          iconsFolderContent.tree.forEach((node) => {
-            if (node.path.includes(".")) {
-              if (node.path.search(".svg") != -1) {
-                //create a category for the icon if it doesn't exist else push the icon to the category
-
-                if (iconsInCategory[iconsCategoryFolderObj?.path])
-                  iconsInCategory[iconsCategoryFolderObj?.path].push(
-                    node.path.substring(0, node.path.length - 4)
-                  );
-                else
-                  iconsInCategory[iconsCategoryFolderObj?.path] = [
-                    node.path.substring(0, node.path.length - 4),
-                  ];
-              }
-            }
-          });
-        }
-
-        // // get all of the category-icons (commented out because it's doesn't seem to be required)
-        // await Promise.all(
-        //   iconCategoryObjList.map(async (category) => {
-        //     // get the icons inside the category folder
-        //     iconsInCategory[category.path] = [];
-        //     const iconCategoryFolderContent = await fetch(category.url).then(
-        //       (res) => res.json()
-        //     );
-        //     iconCategoryFolderContent.tree.forEach((node) => {
-        //       // only get the valid svg icons
-        //       if (node.path.search(".svg") != -1) {
-        //         iconsInCategory[category.path].push(
-        //           node.path.substring(0, node.path.length - 4)
-        //         );
-        //       }
-        //     });
-        //   })
-        // );
-      }
 
       // build the content html for the icon-categories/icons
       let contentHtml = ``;
-
-      Object.entries(iconsInCategory).forEach(([category, icons]) => {
-        // if there are no icons in the category, skip it
-        if (icons.length == 0) return;
-
-        // build html for the category section
-        contentHtml += `
+      contentHtml += `
                 <div class="gap-m direction-row">
-                  <!-- Category Label -->
-                  <div>
-                    <h5 style="text-transform: capitalize;" id="${category}" class="category-label">${category}</h5>
-                  </div>
-      
                   <!-- SVGIcons -->
                   <div class="gap-l box-l">`;
-
-        icons.forEach((icon) => {
-          contentHtml += `
-                    <svg-icon class="${category}-icon">
-                      ${
-                        category != "uncategorized" ? category + "/" : ""
-                      }${icon}
+      icons.map(icon => {
+        contentHtml += `
+                    <svg-icon class="icon-xs" html="${icon}">
+                      ${icon}
                     </svg-icon>
                   `;
-        });
+      });
 
-        contentHtml += `
+      contentHtml += `
                   </div>
                 </div>
                 `;
-      });
 
       // append the built html to the #content
       $("#content").append(contentHtml);
@@ -193,7 +120,7 @@
             if ($(total_icons[i]).hasClass("post-icon")) {
               continue;
             }
-            let item = total_icons[i].innerHTML;
+            let item = total_icons[i].getAttribute('html');
             if (item.search(search_content) == -1) {
               $(total_icons[i]).css("display", NONE);
             } else {
@@ -201,31 +128,12 @@
             }
           }
         }
-
-        // remove .category-label including no svg-icon
-        $(".category-label").each(function () {
-          let categoryId = $(this)[0].id + "-icon";
-          let flag = false;
-          $(document)
-            .find(`svg-icon.${categoryId}`)
-            .each(function (index, icon) {
-              if ($(icon).css("display") == BLOCK) {
-                flag = true;
-              }
-            });
-
-          if (!flag) {
-            $(this).parent().parent().css("display", NONE);
-          } else {
-            $(this).parent().parent().css("display", BLOCK);
-          }
-        });
       });
 
       // copy svg-icon iconName to clipboard on clicking
       $("svg-icon:not(.post-icon)").click(function () {
         // get iconName from svg-icon
-        let iconName = $(this)[0].innerHTML;
+        let iconName = $(this)[0].getAttribute('html')
         let iconHtml = `<svg-icon>${iconName}</svg-icon>`;
 
         // copy iconName to clipboard
