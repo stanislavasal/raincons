@@ -79,7 +79,7 @@
       // build the content html for the icon-categories/icons
       let contentHtml = ``;
       contentHtml += `
-                <div class="gap-m direction-row">
+                <div class="gap-m column">
                   <!-- SVGIcons -->
                   <div class="gap-l box-l">`;
       icons.map(icon => {
