@@ -1,0 +1,22 @@
+{
+  "name": "raincons",
+  "version": "1.0.0",
+  "description": "rnbw icon library",
+  "main": "icons.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rnbwdev/raincons.git"
+  },
+  "keywords": [
+    "icons"
+  ],
+  "author": "under",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rnbwdev/raincons/issues"
+  },
+  "homepage": "https://github.com/rnbwdev/raincons#readme"
+}
